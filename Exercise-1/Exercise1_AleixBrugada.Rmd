@@ -1,0 +1,38 @@
+---
+title: "Cardiac maturation process from human iPSCs"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Introduction
+
+#Summary
+
+To improve the maturity of iPSC-cardiomyocytes, we addressed the cell type specification of iPSC-cardiomyocytes by microarray and analyzed in detail about cardiac maturation process.
+We compared gene expression between samples, and extracted several key genes for cardac maturation and check the function of these genes. We show that a number of genes expression correlate with cardiac maturation process, and found surface markers to discriminate differentiated cardiomyocytes from other immature cells.
+
+#Overall design
+
+mRNA profiles of differentiated iPSC-cardiomyocytes at several differentiation stages. Additionally, we checked the function of several important genes for cardiac maturation, which were extracted from microarray data.
+
+
+```{r}
+iPS <- read.csv("C:/Users/usuari/Desktop/bioinfo/omics/iPS.txt", sep="")
+```
+
+```{r}
+expressions <- read.delim("C:/Users/usuari/Desktop/bioinfo/omics/GSE72611_series_matrix_cut.txt", header=TRUE,row.names = 1)
+```
+
+```{r}
+dim(expressions)
+summary(expressions)
+```
+
+```{r}
+boxplot(expressions, col = c(2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,5))
+```
+
