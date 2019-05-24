@@ -1,6 +1,8 @@
 ---
 title: "Cardiac maturation process from human iPSCs"
 output:
+  html_document:
+    df_print: paged
   word_document: default
 ---
 
@@ -8,16 +10,16 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Summary
+## Summary
 
 To improve the maturity of iPSC-cardiomyocytes, we addressed the cell type specification of iPSC-cardiomyocytes by microarray and analyzed in detail about cardiac maturation process.
 We compared gene expression between samples, and extracted several key genes for cardiac maturation and check the function of these genes. We show that a number of genes expression correlate with the cardiac maturation process, and found surface markers to discriminate differentiated cardiomyocytes from other immature cells.
 
-# Overall design
+## Overall design
 
 it consists of mRNA profiles of differentiated iPSC-cardiomyocytes at several differentiation stages. Additionally, we checked the function of several important genes for cardiac maturation, which were extracted from microarray data.
 
-# Experiments
+## Experiments
 
 After cardiac differentiation, we collected GFP positive cardiomyocytes by FACS sorting on day9, 21, and 30. Additionally, we compared differences of gene expressions between CORIN highly expressed cardiomyocytes and low expressed cardiomyocytes. Moreover, we checked the effects of HDAC2 for cardiac maturation.
 
@@ -36,5 +38,98 @@ summary(expressions)
 
 ```{r}
 boxplot(expressions, col = c(0,2,2,3,3,3,4,4,5,5,5,5,5,5,6,6,6))
+```
+
+First we convert our expressions data frame to a matrix
+```{r}
+expressionValues <- data.matrix(expressions)
+```
+
+We add information about our experiment
+```{r}
+myInfo=list(myName="Aleix Brugada", myLab="Omics Lab", 
+            myContact="aleix.brugada@alum.esci.upf.edu", myTitle="Cardiac maturation process from human iPSCs")
+show(myInfo)
+```
+
+We define our list of genes or identifiers which in our case are the sample names
+```{r}
+myGenes <-  rownames(expressions)
+```
+
+We load Biobase
+```{r}
+require(Biobase)
+```
+
+We start constructing our Expression Set
+```{r}
+myEset <- ExpressionSet(expressionValues)
+class(myEset)
+show(myEset)
+```
+
+We construct an Annotated data frame
+```{r}
+columnDesc <-  data.frame(labelDescription= c("SAMPLE_NAMES", "DAY","Cell Type", "Experiment Type"))
+myAnnotDF <- new("AnnotatedDataFrame", data=targets, varMetadata= columnDesc)
+show(myAnnotDF)
+```
+
+We define our Annotated data frame as the phenoData of our Expression Set
+```{r}
+phenoData(myEset) <- myAnnotDF
+```
+
+```{r}
+rownames(pData(myAnnotDF))<-as.character(pData(myAnnotDF)$SAMPLE_NAME)
+myEset <- ExpressionSet(assayData=expressionValues, phenoData=myAnnotDF)
+show(myEset)
+```
+Now Our expression set has expressionValues as assayData and the Annotated data frame as phenoData
+
+We add our list of genes (sample names) as the feature names of the Expression Set
+```{r}
+myEset <- ExpressionSet(assayData=expressionValues, 
+                        phenoData=myAnnotDF, 
+                        featureNames =myGenes)
+# show(myEset)
+```
+
+We can also store information about the experiment with another class called MIAME
+```{r}
+myDesc <- new("MIAME", name= myInfo[["myName"]],
+              lab= myInfo[["myLab"]],
+              contact= myInfo[["myContact"]] ,
+              title=myInfo[["myTitle"]])
+print(myDesc)
+```
+We add this information to our Expression Set
+```{r}
+myEset <- ExpressionSet(assayData=expressionValues, 
+                        phenoData=myAnnotDF,
+                        featureNames =myGenes,
+                        experimentData = myDesc)
+ show(myEset)
+```
+
+We can also subset our Expression Set. Here we only want the information from before day 30 of experimentation.
+```{r}
+youngEset <- myEset[,pData(myEset)$DAY!='day30']
+dim(exprs(youngEset))
+head(pData(youngEset))
+```
+
+All this process can be shortened by using GEOquery
+```{r}
+if (!require(GEOquery)) {
+  BiocManager::install("GEOquery")
+}
+require(GEOquery)
+gse <- getGEO("GSE72611")
+class(gse)
+names(gse)
+gse[[1]]
+esetFromGEO <- gse[[1]]
 ```
 
