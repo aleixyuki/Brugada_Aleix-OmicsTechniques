@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<title>QualityControl</title>
+
+<script language="JavaScript" src="arrayQualityMetrics.js"></script>
+<link rel="stylesheet" type="text/css" href="arrayQualityMetrics.css"></link>
+</head>
+<body onload="reportinit()"><hr><h1>QualityControl</h1><hr><UL><a href="#S1"><br><li class='tocsection'>Section 1: Between array comparison</li><UL></a><li class='tocmodule'>Distances between arrays</li><li class='tocmodule'>Principal Component Analysis</li></UL><a href="#S2"><br><li class='tocsection'>Section 2: Array intensity distributions</li><UL></a><li class='tocmodule'>Boxplots</li><li class='tocmodule'>Density plots</li></UL><a href="#S3"><br><li class='tocsection'>Section 3: Variance mean dependence</li><UL></a><li class='tocmodule'>Standard deviation versus rank of the mean</li></UL><a href="#S4"><br><li class='tocsection'>Section 4: Individual array quality</li><UL></a><li class='tocmodule'>MA plots</li></UL></UL><hr><a name="arraymetadata" id="arraymetadata-h" href="javascript: toggle('arraymetadata')" style="text-decoration:none;font-weight:bold;font-size:larger">- Array metadata and outlier detection overview</a><br>
+
+<div id="arraymetadata-b" style="display:block">
+<table style="margin-left:auto;text-align:right;" border="1">
+<tr>
+<td bgcolor="#ffffff" style="font-weight:bold"> </td><td bgcolor="#ffffff" style="font-weight:bold">array</td><td bgcolor="#ffffff" style="font-weight:bold">sampleNames</td><td bgcolor="#ffffff" style="font-weight:bold"><a href="#hm">*1</a></td><td bgcolor="#ffffff" style="font-weight:bold"><a href="#box">*2</a></td><td bgcolor="#ffffff" style="font-weight:bold"><a href="#ma">*3</a></td><td bgcolor="#ffffff" style="font-weight:bold">title</td><td bgcolor="#ffffff" style="font-weight:bold">characteristics_ch1</td><td bgcolor="#ffffff" style="font-weight:bold">description</td><td bgcolor="#ffffff" style="font-weight:bold">cell type:ch1</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(1)'></td><td bgcolor="#e0e0f0">1</td><td bgcolor="#d0d0ff">GSM1866367</td><td bgcolor="#e0e0f0">x</td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">day0</td><td bgcolor="#e0e0f0">cell type: Undifferentiated human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of undifferentiated iPSC</td><td bgcolor="#e0e0f0">Undifferentiated human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(2)'></td><td bgcolor="#ffffff">2</td><td bgcolor="#ffffff">GSM1866368</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">day3</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated cells 3 days after the initial differentiation</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(3)'></td><td bgcolor="#e0e0f0">3</td><td bgcolor="#d0d0ff">GSM1866369</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">day5</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated cells 5 days after the initial differentiation</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(4)'></td><td bgcolor="#ffffff">4</td><td bgcolor="#ffffff">GSM1866370</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">day9-CMs</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated cells 9 days after the initial differentiation</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(5)'></td><td bgcolor="#e0e0f0">5</td><td bgcolor="#d0d0ff">GSM1866371</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">day21-CMs</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated cells 21 days after the initial differentiation</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(6)'></td><td bgcolor="#ffffff">6</td><td bgcolor="#ffffff">GSM1866372</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">day30-CMs</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated cells 30 days after the initial differentiation</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(7)'></td><td bgcolor="#e0e0f0">7</td><td bgcolor="#d0d0ff">GSM1866373</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">CORIN high</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated CMs 30 days after the initial differentiation with high CORIN expression</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(8)'></td><td bgcolor="#ffffff">8</td><td bgcolor="#ffffff">GSM1866374</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">CORIN low</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated CMs 30 days after the initial differentiation with low CORIN expression</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(9)'></td><td bgcolor="#e0e0f0">9</td><td bgcolor="#d0d0ff">GSM1866375</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">Si HDAC2 1-1</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siHDAC2</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(10)'></td><td bgcolor="#ffffff">10</td><td bgcolor="#ffffff">GSM1866376</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">Si HDAC2 1-2</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siHDAC2</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(11)'></td><td bgcolor="#e0e0f0">11</td><td bgcolor="#d0d0ff">GSM1866377</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">Si HDAC2 1-3</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siHDAC2</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(12)'></td><td bgcolor="#ffffff">12</td><td bgcolor="#ffffff">GSM1866378</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">Si HDAC2 2-1</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siHDAC2</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(13)'></td><td bgcolor="#e0e0f0">13</td><td bgcolor="#d0d0ff">GSM1866379</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">Si HDAC2 2-2</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siHDAC2</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(14)'></td><td bgcolor="#ffffff">14</td><td bgcolor="#ffffff">GSM1866380</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">Si HDAC2 2-3</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siHDAC2</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(15)'></td><td bgcolor="#e0e0f0">15</td><td bgcolor="#d0d0ff">GSM1866381</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">Si NC-1</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siNegative control</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#ffffff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(16)'></td><td bgcolor="#ffffff">16</td><td bgcolor="#ffffff">GSM1866382</td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff"></td><td bgcolor="#ffffff">Si NC-2</td><td bgcolor="#ffffff">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#ffffff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siNegative control</td><td bgcolor="#ffffff">Differentiated cells from human induced pluripotent stem cells</td></tr>
+<tr>
+<td bgcolor="#d0d0ff"><input type='checkbox' name='ReportObjectCheckBoxes' value='' onchange='checkboxEvent(17)'></td><td bgcolor="#e0e0f0">17</td><td bgcolor="#d0d0ff">GSM1866383</td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff"></td><td bgcolor="#e0e0f0"></td><td bgcolor="#d0d0ff">Si NC-3</td><td bgcolor="#e0e0f0">cell type: Differentiated cells from human induced pluripotent stem cells</td><td bgcolor="#d0d0ff">Gene expression of differentiated CMs 30 days after the initial differentiation treated by siNegative control</td><td bgcolor="#e0e0f0">Differentiated cells from human induced pluripotent stem cells</td></tr>
+</table>
+<br>The columns named *1, *2, ... indicate the calls from the different outlier detection methods:<OL><LI> outlier detection by <a href="#hm">Distances between arrays</a></LI><LI> outlier detection by <a href="#box">Boxplots</a></LI><LI> outlier detection by <a href="#ma">MA plots</a></LI></OL>The outlier detection criteria are explained below in the respective sections. Arrays that were called outliers by at least one criterion are marked by checkbox selection in this table, and are indicated by highlighted lines or points in some of the plots below. By clicking the checkboxes in the table, or on the corresponding points/lines in the plots, you can modify the selection. To reset the selection, reload the HTML page in your browser.<br><br>At the scope covered by this software, outlier detection is a poorly defined question, and there is no 'right' or 'wrong' answer. These are hints which are intended to be followed up manually. If you want to automate outlier detection, you need to limit the scope to a particular platform and experimental design, and then choose and calibrate the metrics used.<br></div><hr><h2><a name= 'S1'>Section 1: Between array comparison</a></h2>
+
+<a name="hm" id="hm-h" href="javascript: toggle('hm')" style="text-decoration:none;font-weight:bold;font-size:larger">- Figure 1: Distances between arrays.</a><br>
+
+<div id="hm-b" style="display:block">
+<img src="hm.png" border="0" alt="hm.png" id="Figls:hm"></img><br>
+<b>Figure 1</b><a href="hm.pdf"> (PDF file)</a> shows a false color heatmap of the distances between arrays. The color scale is chosen to cover the range of distances encountered in the dataset. Patterns in this plot can indicate clustering of the arrays either because of intended biological or unintended experimental factors (batch effects). The distance <i>d<sub>ab</sub></i> between two arrays <i>a</i> and <i>b</i> is computed as the mean absolute difference (L<sub>1</sub>-distance) between the data of the arrays (using the data from all probes without filtering). In formula, <i>d<sub>ab</sub></i> = mean | <i>M<sub>ai</sub> - M<sub>bi</sub></i> |, where <i>M<sub>ai</sub></i> is the value of the <i>i</i>-th probe on the <i>a</i>-th array. Outlier detection was performed by looking for arrays for which the sum of the distances to all other arrays, <i>S<sub>a</sub></i> = &Sigma;<sub><i>b</i></sub> <i>d<sub>ab</sub></i> was exceptionally large. One such array was detected, and it is marked by an asterisk, *.<br><br><br>
+</div>
+
+<a name="out hm" id="out hm-h" href="javascript: toggle('out hm')" style="text-decoration:none;font-weight:bold;font-size:larger">+ Figure 2: Outlier detection for Distances between arrays.</a><br>
+
+<div id="out hm-b" style="display:none">
+<img src="out hm.png" border="0" alt="out hm.png" id="Figls:out hm"></img><br>
+<b>Figure 2</b><a href="out hm.pdf"> (PDF file)</a> shows a bar chart of the sum of distances to other arrays <i>S<sub>a</sub></i>, the outlier detection criterion from the previous figure. The bars are shown in the original order of the arrays. Based on the distribution of the values across all arrays, a threshold of 18.5 was determined, which is indicated by the vertical line. One array exceeded the threshold and was considered an outlier.<br><br><br>
+</div>
+
+<a name="pca" id="pca-h" href="javascript: toggle('pca')" style="text-decoration:none;font-weight:bold;font-size:larger">- Figure 3: Principal Component Analysis.</a><br>
+
+<div id="pca-b" style="display:block">
+<table border="1">
+<tr>
+<td><?xml version="1.0" encoding="ISO8859-1"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="347.37px" height="347.37px" viewBox="0 0 347.37 347.37" version="1.1" id="Fig:pca">
+  <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
+    <gridsvg:generator name="gridSVG" version="1.7-0" time="2019-05-29 13:13:54"/>
+    <gridsvg:argument name="name" value="QualityControl/pca.svg"/>
+    <gridsvg:argument name="exportCoords" value="none"/>
+    <gridsvg:argument name="exportMappings" value="none"/>
+    <gridsvg:argument name="exportJS" value="none"/>
+    <gridsvg:argument name="res" value="72"/>
+    <gridsvg:argument name="prefix" value="Fig:pca"/>
+    <gridsvg:argument name="addClasses" value="FALSE"/>
+    <gridsvg:argument name="indent" value="TRUE"/>
+    <gridsvg:argument name="htmlWrapper" value="FALSE"/>
+    <gridsvg:argument name="usePaths" value="none"/>
+    <gridsvg:argument name="uniqueNames" value="TRUE"/>
+    <gridsvg:separator name="id.sep" value="."/>
+    <gridsvg:separator name="gPath.sep" value="::"/>
+    <gridsvg:separator name="vpPath.sep" value="::"/>
+  </metadata>
+  <g transform="translate(0, 347.37) scale(1, -1)">
+    <g id="Fig:pcagridSVG" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" font-size="12" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill-opacity="0" font-weight="normal" font-style="normal">
+      <defs>
+        <symbol id="Fig:pcagridSVG.pch19" viewBox="-5 -5 10 10" overflow="visible">
+          <circle cx="0" cy="0" r="3.75"/>
+        </symbol>
+      </defs>
+      <g id="Fig:pcaplot_01.background.1">
+        <rect id="Fig:pcaplot_01.background.1.1" x="0" y="0" width="347.37" height="347.37" transform="" fill="none" stroke="none" stroke-opacity="0" fill-opacity="0"/>
+      </g>
+      <g id="Fig:pcaplot_01.toplevel.vp.1" font-size="12">
+        <g id="Fig:pcaplot_01.xlab.vp.1">
+          <g id="Fig:pcaplot_01.xlab.1">
+            <g id="Fig:pcaplot_01.xlab.1.1" transform="translate(189.25, 58.09)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.xlab.1.1.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.xlab.1.1.text" text-anchor="middle" opacity="1" stroke="rgb(0,0,0)" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="12" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.xlab.1.1.tspan.1" dy="4.31" x="0">PC1</tspan>
+                </text>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g id="Fig:pcaplot_01.ylab.vp.1">
+          <g id="Fig:pcaplot_01.ylab.1">
+            <g id="Fig:pcaplot_01.ylab.1.1" transform="translate(10.31, 181.58)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ylab.1.1.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ylab.1.1.text" transform="rotate(-90)" text-anchor="middle" opacity="1" stroke="rgb(0,0,0)" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="12" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ylab.1.1.tspan.1" dy="4.31" x="0">PC2</tspan>
+                </text>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g id="Fig:pcaplot_01.figure.vp.1"/>
+        <defs>
+          <clipPath id="Fig:pcaplot_01.panel.1.1.vp.1.clipPath">
+            <rect x="60.14" y="92.59" width="258.22" height="177.99" fill="none" stroke="none"/>
+          </clipPath>
+        </defs>
+        <g id="Fig:pcaplot_01.panel.1.1.vp.1" clip-path="url(#Fig:pcaplot_01.panel.1.1.vp.1.clipPath)"/>
+        <g id="Fig:pcaplot_01.strip.1.1.off.vp.1">
+          <g id="Fig:pcaplot_01.ticks.top.panel.1.1.1">
+            <polyline id="Fig:pcaplot_01.ticks.top.panel.1.1.1.1" points="111.9,270.58 111.9,276.25" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.top.panel.1.1.1.2" points="180.64,270.58 180.64,276.25" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.top.panel.1.1.1.3" points="249.38,270.58 249.38,276.25" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.top.panel.1.1.1.4" points="318.12,270.58 318.12,276.25" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+          </g>
+        </g>
+        <g id="Fig:pcaplot_01.strip.left.1.1.off.vp.1">
+          <g id="Fig:pcaplot_01.ticks.left.panel.1.1.1">
+            <polyline id="Fig:pcaplot_01.ticks.left.panel.1.1.1.1" points="60.14,96.12 54.47,96.12" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.left.panel.1.1.1.2" points="60.14,130.49 54.47,130.49" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.left.panel.1.1.1.3" points="60.14,164.86 54.47,164.86" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.left.panel.1.1.1.4" points="60.14,199.23 54.47,199.23" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.left.panel.1.1.1.5" points="60.14,233.6 54.47,233.6" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.left.panel.1.1.1.6" points="60.14,267.97 54.47,267.97" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+          </g>
+          <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1">
+            <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.1" transform="translate(48.81, 130.49)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.1.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.1.text" text-anchor="end" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.1.tspan.1" dy="3.59" x="0">-100</tspan>
+                </text>
+              </g>
+            </g>
+            <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.2" transform="translate(48.81, 164.86)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.2.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.2.text" text-anchor="end" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.2.tspan.1" dy="3.59" x="0">-50</tspan>
+                </text>
+              </g>
+            </g>
+            <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.3" transform="translate(48.81, 199.23)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.3.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.3.text" text-anchor="end" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.3.tspan.1" dy="3.59" x="0">0</tspan>
+                </text>
+              </g>
+            </g>
+            <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.4" transform="translate(48.81, 233.6)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.4.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.4.text" text-anchor="end" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.left.panel.1.1.1.4.tspan.1" dy="3.59" x="0">50</tspan>
+                </text>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g id="Fig:pcaplot_01.panel.1.1.off.vp.1">
+          <g id="Fig:pcaplot_01.ticks.bottom.panel.1.1.1">
+            <polyline id="Fig:pcaplot_01.ticks.bottom.panel.1.1.1.1" points="111.9,92.59 111.9,86.92" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.bottom.panel.1.1.1.2" points="180.64,92.59 180.64,86.92" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.bottom.panel.1.1.1.3" points="249.38,92.59 249.38,86.92" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.bottom.panel.1.1.1.4" points="318.12,92.59 318.12,86.92" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+          </g>
+          <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1">
+            <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.1" transform="translate(111.9, 81.25)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.1.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.1.text" text-anchor="middle" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.1.tspan.1" dy="7.18" x="0">-200</tspan>
+                </text>
+              </g>
+            </g>
+            <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.2" transform="translate(180.64, 81.25)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.2.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.2.text" text-anchor="middle" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.2.tspan.1" dy="7.18" x="0">-100</tspan>
+                </text>
+              </g>
+            </g>
+            <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.3" transform="translate(249.38, 81.25)" stroke-width="0.1">
+              <g id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.3.scale" transform="scale(1, -1)">
+                <text x="0" y="0" id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.3.text" text-anchor="middle" stroke="rgb(0,0,0)" opacity="1" fill="rgb(0,0,0)" stroke-opacity="1" fill-opacity="1" font-size="9.6" font-weight="normal" font-style="normal">
+                  <tspan id="Fig:pcaplot_01.ticklabels.bottom.panel.1.1.1.3.tspan.1" dy="7.18" x="0">0</tspan>
+                </text>
+              </g>
+            </g>
+          </g>
+          <g id="Fig:pcaplot_01.ticks.right.panel.1.1.1">
+            <polyline id="Fig:pcaplot_01.ticks.right.panel.1.1.1.1" points="318.36,96.12 324.03,96.12" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.right.panel.1.1.1.2" points="318.36,130.49 324.03,130.49" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.right.panel.1.1.1.3" points="318.36,164.86 324.03,164.86" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.right.panel.1.1.1.4" points="318.36,199.23 324.03,199.23" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.right.panel.1.1.1.5" points="318.36,233.6 324.03,233.6" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+            <polyline id="Fig:pcaplot_01.ticks.right.panel.1.1.1.6" points="318.36,267.97 324.03,267.97" stroke="rgb(0,0,0)" opacity="1" stroke-dasharray="none" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+          </g>
+        </g>
+        <defs>
+          <clipPath id="Fig:pcaplot_01.panel.1.1.vp.2.clipPath">
+            <rect x="60.14" y="92.59" width="258.22" height="177.99" fill="none" stroke="none"/>
+          </clipPath>
+        </defs>
+        <g id="Fig:pcaplot_01.panel.1.1.vp.2" clip-path="url(#Fig:pcaplot_01.panel.1.1.vp.2.clipPath)">
+          <g id="Fig:pcaplot_01.xyplot.points.panel.1.1.1">
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.1" href="#Fig:pcagridSVG.pch19" x="85.69" y="225.17" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.2" href="#Fig:pcagridSVG.pch19" x="76" y="213.36" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.3" href="#Fig:pcagridSVG.pch19" x="98.39" y="210.21" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.4" href="#Fig:pcagridSVG.pch19" x="222.52" y="120.68" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.5" href="#Fig:pcagridSVG.pch19" x="263.59" y="113.34" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.6" href="#Fig:pcagridSVG.pch19" x="276.07" y="109.48" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.7" href="#Fig:pcagridSVG.pch19" x="293.27" y="103.52" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.8" href="#Fig:pcagridSVG.pch19" x="287.36" y="107.25" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.9" href="#Fig:pcagridSVG.pch19" x="291.18" y="240.82" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.10" href="#Fig:pcagridSVG.pch19" x="290.73" y="259.65" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.11" href="#Fig:pcagridSVG.pch19" x="299.78" y="251.69" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.12" href="#Fig:pcagridSVG.pch19" x="302.51" y="249.93" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.13" href="#Fig:pcagridSVG.pch19" x="297.24" y="257.66" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.14" href="#Fig:pcagridSVG.pch19" x="283.83" y="204.03" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.15" href="#Fig:pcagridSVG.pch19" x="285.43" y="237.1" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.16" href="#Fig:pcagridSVG.pch19" x="290.24" y="247.97" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+            <use id="Fig:pcaplot_01.xyplot.points.panel.1.1.1.17" href="#Fig:pcagridSVG.pch19" x="295.64" y="235.12" width="8" height="8" transform=" translate(-4,-4)" stroke="rgb(31,120,180)" stroke-width="0.94" opacity="1" fill="rgb(31,120,180)" font-size="8" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal"/>
+          </g>
+        </g>
+        <g id="Fig:pcaplot_01.panel.1.1.off.vp.2">
+          <g id="Fig:pcaplot_01.border.panel.1.1.1">
+            <rect id="Fig:pcaplot_01.border.panel.1.1.1.1" x="60.14" y="92.59" width="258.22" height="177.99" transform="" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0"/>
+          </g>
+        </g>
+        <g id="Fig:pcaplot_01..1"/>
+      </g>
+    </g>
+  </g>
+</svg></td><td><table id='Tab:pca'><tr bgcolor='#d0d0ff'><td>array</td><td style='font-weight:bold'></td></tr>
+
+<tr bgcolor='#e0e0f0'><td>sampleNames</td><td style='font-weight:bold'></td></tr>
+
+<tr bgcolor='#d0d0ff'><td>title</td><td style='font-weight:bold'></td></tr>
+
+<tr bgcolor='#e0e0f0'><td>characteristics_ch1</td><td style='font-weight:bold'></td></tr>
+
+<tr bgcolor='#d0d0ff'><td>description</td><td style='font-weight:bold'></td></tr>
+
+<tr bgcolor='#e0e0f0'><td>cell type:ch1</td><td style='font-weight:bold'></td></tr>
+</table></td></tr>
+</table>
+<br>
+<b>Figure 3</b><a href="pca.pdf"> (PDF file)</a> shows a scatterplot of the arrays along the first two principal components. You can use this plot to explore if the arrays cluster, and whether this is according to an intended experimental factor (you can indicate such a factor by color using the 'intgroup' argument), or according to unintended causes such as batch effects. Move the mouse over the points to see the sample names.<BR>Principal component analysis is a dimension reduction and visualisation technique that is here used to project the multivariate data vector of each array into a two-dimensional plot, such that the spatial arrangement of the points in the plot reflects the overall data (dis)similarity between the arrays.<br><br><br>
+</div><hr><h2><a name= 'S2'>Section 2: Array intensity distributions</a></h2>
+
+<a name="box" id="box-h" href="javascript: toggle('box')" style="text-decoration:none;font-weight:bold;font-size:larger">- Figure 4: Boxplots.</a><br>
+
+<div id="box-b" style="display:block">
+<img src="box.png" border="0" alt="box.png" id="Figls:box"></img><br>
+<b>Figure 4</b><a href="box.pdf"> (PDF file)</a> shows boxplots representing summaries of the signal intensity distributions of the arrays. Each box corresponds to one array. Typically, one expects the boxes to have similar positions and widths. If the distribution of an array is very different from the others, this may indicate an experimental problem. Outlier detection was performed by computing the Kolmogorov-Smirnov statistic <i>K<sub>a</sub></i> between each array's distribution and the distribution of the pooled data.<br><br><br>
+</div>
+
+<a name="out box" id="out box-h" href="javascript: toggle('out box')" style="text-decoration:none;font-weight:bold;font-size:larger">+ Figure 5: Outlier detection for Boxplots.</a><br>
+
+<div id="out box-b" style="display:none">
+<img src="out box.png" border="0" alt="out box.png" id="Figls:out box"></img><br>
+<b>Figure 5</b><a href="out box.pdf"> (PDF file)</a> shows a bar chart of the Kolmogorov-Smirnov statistic <i>K<sub>a</sub></i>, the outlier detection criterion from the previous figure. The bars are shown in the original order of the arrays. Based on the distribution of the values across all arrays, a threshold of 0.211 was determined, which is indicated by the vertical line. None of the arrays exceeded the threshold and was considered an outlier.<br><br><br>
+</div>
